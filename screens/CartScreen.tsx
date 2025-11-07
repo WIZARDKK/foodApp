@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import CartItem from '../components/CartItem';
 import PromoCodeInput from '../components/PromoCodeInput';
@@ -22,6 +23,7 @@ type CartScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Cart'>;
 
 interface CartScreenProps {
   navigation: CartScreenNavigationProp;
+  route: RouteProp<RootStackParamList, 'Cart'>;
 }
 
 interface CartItemType {
@@ -33,7 +35,7 @@ interface CartItemType {
   image?: any;
 }
 
-const CartScreen: React.FC<CartScreenProps> = ({ navigation }) => {
+const CartScreen: React.FC<CartScreenProps> = ({ navigation, route }) => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([
     {
       id: '1',
@@ -110,6 +112,23 @@ const CartScreen: React.FC<CartScreenProps> = ({ navigation }) => {
   const handleBack = () => {
     navigation.goBack();
   };
+
+  // If navigated with a new order, merge it into cartItems
+  useEffect(() => {
+    const newOrder = route?.params?.newOrder;
+    if (newOrder) {
+      setCartItems(items => {
+        // If item with same id exists, increase quantity
+        const existing = items.find(i => i.id === newOrder.id);
+        if (existing) {
+          return items.map(i =>
+            i.id === newOrder.id ? { ...i, quantity: i.quantity + newOrder.quantity } : i
+          );
+        }
+        return [{ ...newOrder }, ...items];
+      });
+    }
+  }, [route?.params?.newOrder]);
 
   const handleBrowseMenu = () => {
     navigation.navigate('Home');

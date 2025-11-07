@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -15,6 +15,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import DeliveryAddress from '../components/checkout/DeliveryAddress';
 import DeliveryInstructions from '../components/checkout/DeliveryInstructions';
@@ -23,9 +24,11 @@ import PaymentMethod from '../components/checkout/PaymentMethod';
 import PlaceOrderButton from '../components/checkout/PlaceOrderButton';
 
 type CheckoutScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Checkout'>;
+type CheckoutScreenRouteProp = RouteProp<RootStackParamList, 'Checkout'>;
 
 interface CheckoutScreenProps {
   navigation: CheckoutScreenNavigationProp;
+  route: CheckoutScreenRouteProp;
 }
 
 interface OrderItem {
@@ -36,13 +39,20 @@ interface OrderItem {
   image?: any;
 }
 
-const CheckoutScreen: React.FC<CheckoutScreenProps> = ({ navigation }) => {
-  // Address state
-  const [address] = useState({
+const CheckoutScreen: React.FC<CheckoutScreenProps> = ({ navigation, route }) => {
+  // Address state (prefill from route params if provided)
+  const initialAddress = route?.params?.address ?? {
     street: '2118 Thornridge Cir...',
     city: 'Connecticut',
     zipCode: '35624',
-  });
+  };
+  const [address, setAddress] = useState(initialAddress);
+
+  useEffect(() => {
+    if (route?.params?.address) {
+      setAddress(route.params.address);
+    }
+  }, [route?.params?.address]);
 
   // Order state
   const [orderItems] = useState<OrderItem[]>([
@@ -80,7 +90,8 @@ const CheckoutScreen: React.FC<CheckoutScreenProps> = ({ navigation }) => {
   const total = subtotal + deliveryFee;
 
   const handleChangeAddress = () => {
-    Alert.alert('Change Address', 'Address selection will open here');
+    // Navigate to Delivery Address screen where user can change or add an address
+    navigation.navigate('DeliveryAddress');
   };
 
   const handlePlaceOrder = () => {

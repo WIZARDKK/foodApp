@@ -5,7 +5,8 @@ import {
   Text, 
   SafeAreaView,
   StatusBar,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -142,7 +143,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <Header location="123 Main Street, Anytown" />
+  <Header location="123 Main Street, Anytown" onProfilePress={() => navigation.navigate('Account')} />
       
       <ScrollView 
         style={styles.scrollView}
@@ -179,6 +180,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </ScrollView>
         </View>
 
+        
+
         {/* Category Filters */}
         <View style={styles.categorySection}>
           <ScrollView 
@@ -205,6 +208,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               />
             ))}
           </ScrollView>
+        </View>
+
+        {/* Customize Card */}
+        <View style={styles.customizeCardContainer}>
+          <TouchableOpacity
+            style={styles.customizeCard}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('CustomizeBowl')}
+          >
+            <View style={styles.customizeLeft}>
+              <View style={styles.customizeIconContainer}>
+                <Ionicons name="fast-food" size={18} color="#FF6B35" />
+              </View>
+              <View style={styles.customizeText}>
+                <Text style={styles.customizeTitle}>Customize Your Bowl</Text>
+                <Text style={styles.customizeSubtitle}>Build your perfect meal</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#FF6B35" />
+          </TouchableOpacity>
         </View>
 
         {/* Section Title */}
@@ -292,6 +315,50 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6B7280',
     textAlign: 'center',
+  },
+  customizeCardContainer: {
+    paddingHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 6,
+  },
+  customizeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FEECEC',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowRadius: 6,
+    elevation: 1,
+  },
+  customizeLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  customizeIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#FFE6E3',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  customizeText: {
+    flexDirection: 'column',
+  },
+  customizeTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  customizeSubtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginTop: 2,
   },
 });
 
