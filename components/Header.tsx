@@ -4,9 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface HeaderProps {
   location: string;
+  onProfilePress?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ location }) => {
+const Header: React.FC<HeaderProps> = ({ location, onProfilePress }) => {
   return (
     <View style={styles.container}>
       <View style={styles.locationContainer}>
@@ -16,7 +17,7 @@ const Header: React.FC<HeaderProps> = ({ location }) => {
           <Text style={styles.locationText}>{location}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.profileButton}>
+      <TouchableOpacity style={styles.profileButton} onPress={onProfilePress}>
         <Ionicons name="person-outline" size={24} color="#000" />
       </TouchableOpacity>
     </View>
